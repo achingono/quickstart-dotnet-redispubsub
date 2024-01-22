@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  pub:
+    image: mcr.microsoft.com/dotnet/sdk:7.0
+    container_name: quickstart-pub
+    environment:
+      CONNECTIONSTRINGS__Redis: redis
+      Redis__ChannelName: quickstart
+    volumes:
+      - ./src/Quickstart.Publisher:/src:cached
+    working_dir: /src
+    command: dotnet watch run --urls http://*:8080
+    ports:
+      - "5010:8080"
+
+  sub:
+    image: mcr.microsoft.com/dotnet/sdk:7.0
+    container_name: quickstart-sub
+    environment:
+      CONNECTIONSTRINGS__Redis: redis
+      Redis__ChannelName: quickstart
+    volumes:
+      - ./src/Quickstart.Subscriber:/src:cached
+    working_dir: /src
+    command: dotnet watch run --urls http://*:8080
+    ports:
+      - "5020:8080"
+
+  redis:
+    image: redis:7
+    container_name: quickstart-redis

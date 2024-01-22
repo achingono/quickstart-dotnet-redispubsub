@@ -12,6 +12,13 @@ app.MapGet("/", async (ISubscriber subscriber) => {
     return message;
 });
 
+app.MapGet("/config", (IConfiguration configuration) => new {
+    Redis = new {
+        ConnectionString = configuration.GetConnectionString("Redis"),
+        ChannelName = configuration["Redis:ChannelName"]
+    }
+});
+
 app.MapGet("/ready", () => true);
 app.MapGet("/healthz", (ISubscriber subscriber) => subscriber.IsConnected());
 
