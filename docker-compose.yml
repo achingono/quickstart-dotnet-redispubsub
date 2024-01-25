@@ -27,6 +27,20 @@ services:
     ports:
       - "5020:8080"
 
+  node:
+    image: node:14
+    container_name: quickstart-node
+    environment:
+      REDIS_CONNECTION_STRING: redis
+      REDIS_CHANNEL_NAME: quickstart
+      PORT: 8080
+    volumes:
+      - ./src/Quickstart.Subscriber.Node:/src:cached
+    working_dir: /src
+    command: npm start
+    ports:
+      - "5030:8080"
+
   redis:
     image: redis:7
     container_name: quickstart-redis
